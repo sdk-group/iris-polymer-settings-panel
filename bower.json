@@ -1,0 +1,25 @@
+{
+  "name": "iris-polymer-settings-panel",
+  "authors": [
+    "artificial-life <proteus.protocol@gmail.com>"
+  ],
+  "description": "settings panel for arms",
+  "main": "iris-settings-panel.html",
+  "moduleType": [],
+  "keywords": [
+    "settings",
+    "localStorage"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iris-polymer-importer": "https://github.com/sdk-group/iris-polymer-importer.git"
+  }
+}
