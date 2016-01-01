@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 
 
 <dom-module id="iris-settings-control">
@@ -13,16 +14,36 @@
       }
     </style>
     <template is="dom-if" if="{{item.isInput}}">
+      <paper-input label="{{item.label}}"></paper-input>
+    </template>
+
+    <template is="dom-if" if="{{item.isSlider}}">
+      <paper-slider min="{{item.params.min}}" max="{{item.params.max}}" value="{{item.value}}"></paper-slider>
     </template>
 
     <template is="dom-if" if="{{item.isCheckbox}}">
+      <paper-checkbox>{{item.label}}</paper-checkbox>
     </template>
 
     <template is="dom-if" if="{{item.isDropdown}}">
+      <paper-dropdown-menu label="{{item.label}}">
+        <paper-menu class="dropdown-content">
+          <template is="dom-repeat" items="{{item.params}}" as="param">
+            <paper-item>{{param}}</paper-item>
+          </template>
+        </paper-menu>
+      </paper-dropdown-menu>
     </template>
 
     <template is="dom-if" if="{{item.isList}}">
+      <span class="settings-field">{{item.label}}</span>
+      <paper-listbox>
+        <template is="dom-repeat" items="{{item.params}}" as="param">
+          <paper-item>{{param}}</paper-item>
+        </template>
+      </paper-listbox>
     </template>
+
   </template>
 
   <script>
@@ -32,6 +53,9 @@
         is: 'iris-settings-control',
         properties: {
           item: Object
+        },
+        ready() {
+
         }
       });
     })();

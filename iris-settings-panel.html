@@ -1,6 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iris-polymer-importer/iris-importer.html">
 
+<link rel="import" href="../../bower_components/iron-meta/iron-meta.html">
+
+<link rel="import" href="iris-settings-control.html">
+
 <dom-module id="iris-settings-panel">
   <template>
     <style include="shared-styles"></style>
@@ -9,7 +13,10 @@
         display: block;
       }
     </style>
-
+    <iron-meta id="meta"></iron-meta>
+    <template is="dom-repeat" items="{{description}}" as="field">
+      <iris-settings-control item="{{field}}"></iris-settings-control>
+    </template>
   </template>
 
   <script>
@@ -17,10 +24,9 @@
       'use strict';
       Polymer({
         is: 'iris-settings-panel',
-        properties: {
-          api: Object
-        },
+        properties: {},
         ready() {
+          let api = this.$.meta.byKey('api');
           let settings = api.require('settings');
           this.description = settings.description;
         }
