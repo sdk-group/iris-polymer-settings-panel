@@ -14,10 +14,12 @@
       }
     </style>
     <template is="dom-if" if="{{item.isInput}}">
-      <paper-input label="{{item.label}}"></paper-input>
+      <span class="settings-field">{{item.label}}</span>
+      <paper-input></paper-input>
     </template>
 
     <template is="dom-if" if="{{item.isSlider}}">
+      <span class="settings-field">{{item.label}}</span>
       <paper-slider min="{{item.params.min}}" max="{{item.params.max}}" value="{{item.value}}"></paper-slider>
     </template>
 
@@ -26,7 +28,8 @@
     </template>
 
     <template is="dom-if" if="{{item.isDropdown}}">
-      <paper-dropdown-menu label="{{item.label}}">
+      <span class="settings-field">{{item.label}}</span>
+      <paper-dropdown-menu>
         <paper-menu class="dropdown-content">
           <template is="dom-repeat" items="{{item.params}}" as="param">
             <paper-item>{{param}}</paper-item>
