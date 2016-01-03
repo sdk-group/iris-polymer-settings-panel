@@ -14,8 +14,13 @@
       }
     </style>
     <iron-meta id="meta"></iron-meta>
-    <template is="dom-repeat" items="{{description}}" as="field">
-      <iris-settings-control item="{{field}}"></iris-settings-control>
+    <template id="groups" is="dom-repeat" items="{{description}}" as="group">
+      <h2>{{group.name}}</h2>
+      <section class="settings-group">
+        <template id="settings-field" is="dom-repeat" items="{{group.items}}" as="field">
+          <iris-settings-control item="{{field}}"></iris-settings-control>
+        </template>
+      </section>
     </template>
   </template>
 

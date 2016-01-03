@@ -1,9 +1,11 @@
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 
+
+<link rel="import" href="iris-settings-access.html">
 
 <dom-module id="iris-settings-control">
   <template>
@@ -13,36 +15,39 @@
         display: block;
       }
     </style>
+    <iris-settings-access id="settings"></iris-settings-access>
+
     <template is="dom-if" if="{{item.isInput}}">
-      <span class="settings-field">{{item.label}}</span>
-      <paper-input></paper-input>
+      <span class="settings-field">[[item.label]]</span>
+      <paper-input value="{{item.value}}"></paper-input>
     </template>
 
     <template is="dom-if" if="{{item.isSlider}}">
-      <span class="settings-field">{{item.label}}</span>
-      <paper-slider min="{{item.params.min}}" max="{{item.params.max}}" value="{{item.value}}"></paper-slider>
+      <span class="settings-field">[[item.label]]</span>
+      <paper-slider min="[[item.params.min]]" max="[[item.params.max]]" value="{{item.value}}" editable></paper-slider>
     </template>
 
-    <template is="dom-if" if="{{item.isCheckbox}}">
-      <paper-checkbox>{{item.label}}</paper-checkbox>
+    <template is="dom-if" if="{{item.isToggle}}">
+      <span class="settings-field">[[item.label]]</span>
+      <paper-toggle-button id="toggle" checked="{{item.value}}"></paper-toggle-button>
     </template>
 
     <template is="dom-if" if="{{item.isDropdown}}">
-      <span class="settings-field">{{item.label}}</span>
+      <span class="settings-field">[[item.label]]</span>
       <paper-dropdown-menu>
-        <paper-menu class="dropdown-content">
+        <paper-listbox class="dropdown-content" selected="{{item.value}}">
           <template is="dom-repeat" items="{{item.params}}" as="param">
-            <paper-item>{{param}}</paper-item>
+            <paper-item>[[param]]</paper-item>
           </template>
-        </paper-menu>
+        </paper-listbox>
       </paper-dropdown-menu>
     </template>
 
     <template is="dom-if" if="{{item.isList}}">
-      <span class="settings-field">{{item.label}}</span>
-      <paper-listbox>
+      <span class="settings-field">[[item.label]]</span>
+      <paper-listbox selected="{{item.value}}">
         <template is="dom-repeat" items="{{item.params}}" as="param">
-          <paper-item>{{param}}</paper-item>
+          <paper-item>[[param]]</paper-item>
         </template>
       </paper-listbox>
     </template>
@@ -52,13 +57,26 @@
   <script>
     (function() {
       'use strict';
+
       Polymer({
         is: 'iris-settings-control',
         properties: {
           item: Object
         },
+        observers: [
+          'itemValueChanged(item.value)'
+        ],
         ready() {
+          let stored = this.$.settings.getItem(this.item.name);
 
+          this.set('item.value', this.item.isToggle ? stored === 'true' : stored);
+
+          this.init = true;
+        },
+        itemValueChanged(value) {
+          if (!this.init) return;
+
+          this.$.settings.setItem(this.item.name, value)
         }
       });
     })();

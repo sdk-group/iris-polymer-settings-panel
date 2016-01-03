@@ -1,0 +1,37 @@
+<link rel="import" href="../../bower_components/iron-meta/iron-meta.html">
+
+<dom-module id="iris-settings-access">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <iron-meta id="meta"></iron-meta>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      let settings;
+      Polymer({
+        is: 'iris-settings-access',
+        properties: {},
+        get(name) {
+          return localStorage.getItem(name);
+        },
+        ready() {
+          settings = settings || this.$.meta.byKey('api').require('settings');
+        },
+        getItem(name) {
+          return settings.getItem(name);
+        },
+        setItem(name, value) {
+          return settings.setItem(name, value);
+        }
+      });
+    })();
+  </script>
+
+</dom-module>
