@@ -8,7 +8,7 @@
         display: block;
       }
     </style>
-    <iron-meta id="meta"></iron-meta>
+    <iris-api-controller id="api"></iris-api-controller>
   </template>
 
   <script>
@@ -22,7 +22,7 @@
           return localStorage.getItem(name);
         },
         ready() {
-          settings = settings || this.$.meta.byKey('api').require('settings');
+          settings = settings || this.$.api.require('settings');
         },
         getItem(name) {
           return settings.getItem(name);
