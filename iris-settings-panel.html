@@ -41,8 +41,7 @@
       'use strict';
       Polymer({
         is: 'iris-settings-panel',
-        properties: {},
-        ready() {
+        attached() {
           let api = this.$.api;
           let settings = api.require('settings');
           this.description = settings.description;
