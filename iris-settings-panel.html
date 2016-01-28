@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iris-polymer-importer/iris-importer.html">
-
-<link rel="import" href="../../bower_components/iron-meta/iron-meta.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="iris-settings-control.html">
 
@@ -47,10 +46,11 @@
           this.description = settings.description;
         },
         closeSettings() {
-          window.history.back();
+          // window.history.back();
+          page('/');
           setTimeout(() => {
             window.location.reload();
-          }, 100);
+          }, 10);
         }
       });
     })();
