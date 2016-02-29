@@ -11,19 +11,24 @@
       :host {
         display: block;
       }
-      
+
       paper-fab {
         border-radius: 3px;
         background-color: rgba(0, 0, 0, 0.0);
         border: 3px solid #6E4D44;
         color: #6E4D44;
       }
-      
+
       paper-fab.flat {
         @applay(--shadow-none);
       }
+
+      section {
+        height: auto;
+      }
+
     </style>
-    <paper-fab class="flat" mini icon="chevron-left" elevation="0" on-click="closeSettings"> </paper-fab>
+    <paper-fab class="flat" mini icon="chevron-left" elevation="0" on-click="closeSettings"></paper-fab>
     <iris-api-controller id="api"></iris-api-controller>
     <template id="groups" is="dom-repeat" items="{{description}}" as="group">
       <h2>{{group.name}}</h2>
@@ -36,7 +41,7 @@
   </template>
 
   <script>
-    (function() {
+    (function () {
       'use strict';
       Polymer({
         is: 'iris-settings-panel',
