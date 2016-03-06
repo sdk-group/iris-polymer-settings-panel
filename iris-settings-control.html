@@ -12,26 +12,43 @@
       :host {
         display: block;
       }
+      
+      iron-icon {
+        width: 20px;
+        height: 20px;
+      }
+      
+      .status {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+      }
+      
+      .settings-field {
+        display: inline-block;
+        height: 20px;
+      }
     </style>
     <iris-settings-access id="settings"></iris-settings-access>
+    <span class="settings-field">[[item.label]]
+      <iron-icon hidden$="[[good]]" icon="done"></iron-icon>
+      <iron-icon hidden$="[[bad]]" icon="error"></iron-icon>
+    </span>
+
 
     <template is="dom-if" if="{{item.isInput}}">
-      <span class="settings-field">[[item.label]]</span>
       <paper-input value="{{item.value}}"></paper-input>
     </template>
 
     <template is="dom-if" if="{{item.isSlider}}">
-      <span class="settings-field">[[item.label]]</span>
       <paper-slider min="[[item.params.min]]" max="[[item.params.max]]" value="{{item.value}}" editable></paper-slider>
     </template>
 
     <template is="dom-if" if="{{item.isToggle}}">
-      <span class="settings-field">[[item.label]]</span>
       <paper-toggle-button id="toggle" checked="{{item.value}}"></paper-toggle-button>
     </template>
 
     <template is="dom-if" if="{{item.isDropdown}}">
-      <span class="settings-field">[[item.label]]</span>
       <paper-dropdown-menu>
         <paper-listbox class="dropdown-content" selected="{{item.value}}">
           <template is="dom-repeat" items="{{item.params}}" as="param">
@@ -42,7 +59,6 @@
     </template>
 
     <template is="dom-if" if="{{item.isList}}">
-      <span class="settings-field">[[item.label]]</span>
       <paper-listbox selected="{{item.value}}">
         <template is="dom-repeat" items="{{item.params}}" as="param">
           <paper-item>[[param]]</paper-item>
@@ -59,22 +75,46 @@
       Polymer({
         is: 'iris-settings-control',
         properties: {
-          item: Object
+          item: Object,
+          valueChanged: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          name: {
+            type: Object,
+            reflectToAttribute: true
+          }
         },
         observers: [
           'itemValueChanged(item.value)'
         ],
         attached() {
           let stored = this.$.settings.getItem(this.item.name);
-
+          this.name = this.item.name;
           this.set('item.value', this.item.isToggle ? stored === 'true' : stored);
+          this.old_value = this.item.value;
 
           this.init = true;
+          this.good = true;
+          this.bad = true;
+        },
+        check(status) {
+          this.good = !status;
+          this.bad = status;
         },
         itemValueChanged(value) {
           if (!this.init) return;
-
-          this.$.settings.setItem(this.item.name, value)
+          this.good = true;
+          this.set('valueChanged', this.old_value != value);
+        },
+        restore() {
+          this.set('item.value', this.old_value);
+        },
+        save() {
+          if (!this.init) return;
+          this.$.settings.setItem(this.item.name, this.item.value)
+          this.old_value = this.item.value;
         }
       });
     })();

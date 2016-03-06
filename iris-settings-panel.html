@@ -26,17 +26,42 @@
       section {
         height: auto;
       }
+      
+      .status {
+        width: 64px;
+      }
+      
+      paper-spinner {
+        width: 20px;
+        height: 20px;
+      }
     </style>
+
+    <paper-dialog id="leave-dialog">
+      <h2>У Вас есть несохраненные изменения</h2>
+      <div class="buttons">
+        <paper-button dialog-dismiss on-tap="dropAndClose">Продолжить без сохранения</paper-button>
+        <paper-button dialog-confirm on-tap="saveAndClose">Сохранить</paper-button>
+      </div>
+    </paper-dialog>
+
     <paper-fab class="flat" mini icon="chevron-left" elevation="0" on-click="closeSettings"></paper-fab>
     <iris-api-controller id="api"></iris-api-controller>
     <template id="groups" is="dom-repeat" items="{{description}}" as="group">
       <h2>{{group.name}}</h2>
       <section class="settings-group">
         <template id="settings-field" is="dom-repeat" items="{{group.items}}" as="field">
-          <iris-settings-control item="{{field}}"></iris-settings-control>
+          <iris-settings-control item="{{field}}" value-changed="{{valueChanged}}"></iris-settings-control>
         </template>
       </section>
     </template>
+
+    <paper-button on-tap="checkComplex" raised>
+      Проверить
+    </paper-button>
+    <paper-button hidden$="[[!valueChanged]]" on-tap="save" raised>Сохранить</paper-button>
+
+
   </template>
 
   <script>
@@ -48,13 +73,69 @@
           let api = this.$.api;
           let settings = api.require('settings');
           this.description = settings.description;
+          this.valueChanged = false;
+          this.saved = false;
+        },
+        save() {
+          let all = this.querySelectorAll('iris-settings-control');
+          _.forEach(all, e => e.save())
+          this.valueChanged = false;
+          this.saved = true;
         },
         closeSettings() {
-          // window.history.back();
-          page('/');
-          setTimeout(() => {
-            window.location.reload();
-          }, 10);
+          if (this.valueChanged) {
+            this.$["leave-dialog"].open();
+          } else {
+            this.close();
+          }
+
+        },
+        checkComplex() {
+          //@TODO: completly rework it
+
+          let all = this.querySelectorAll('iris-settings-control');
+          let server_el = this.querySelector('iris-settings-control[name=api_server]');
+          let port_el = this.querySelector('iris-settings-control[name=api_port]');
+
+          let server = server_el.item.value;
+          let port = port_el.item.value;
+
+          let options = {
+            method: 'POST',
+            headers: new Headers({
+              'Content-Type': 'application/json'
+            })
+          };
+          let url = 'http://' + server + ':' + port + '/connection/test';
+
+          fetch(url, options)
+            .then((d) => d.json()).then((d) => {
+              console.log('Check status:', d);
+              server_el.check(true)
+              port_el.check(true)
+            }).catch((r) => {
+              console.log('Check status:', r);
+              server_el.check(false)
+              port_el.check(false)
+            });
+        },
+        saveAndClose() {
+          this.save();
+          this.close();
+        },
+        dropAndClose() {
+          let all = this.querySelectorAll('iris-settings-control');
+          _.forEach(all, e => e.restore())
+          this.close();
+        },
+        close() {
+
+          if (this.saved) {
+            page('/restart');
+
+          } else {
+            page('/');
+          }
         }
       });
     })();
