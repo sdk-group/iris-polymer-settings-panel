@@ -113,8 +113,11 @@
         },
         save() {
           if (!this.init) return;
+          if (this.old_value === this.item.value) return false;
+
           this.$.settings.setItem(this.item.name, this.item.value)
           this.old_value = this.item.value;
+          return true;
         }
       });
     })();

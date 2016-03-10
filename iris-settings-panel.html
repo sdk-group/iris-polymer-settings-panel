@@ -77,9 +77,10 @@
         },
         save() {
           let all = this.querySelectorAll('iris-settings-control');
-          _.forEach(all, e => e.save())
+          let result = _.map(all, e => e.save())
           this.valueChanged = false;
           this.saved = true;
+          return result;
         },
         closeSettings() {
           if (this.valueChanged) {
