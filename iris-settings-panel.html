@@ -37,6 +37,7 @@
         width: 20px;
         height: 20px;
       }
+
     </style>
 
     <paper-dialog id="leave-dialog">
@@ -58,13 +59,15 @@
       </section>
     </template>
 
-    <paper-button on-tap="checkComplex" raised> Проверить </paper-button>
+    <paper-button on-tap="checkComplex" raised>
+      Проверить
+    </paper-button>
     <paper-button hidden$="[[!valueChanged]]" on-tap="save" raised>Сохранить</paper-button>
 
   </template>
 
   <script>
-    (function() {
+    (function () {
       'use strict';
       Polymer({
         is: 'iris-settings-panel',
@@ -102,22 +105,19 @@
 
           let options = {
             method: 'POST',
-            headers: new Headers({
-              'Content-Type': 'application/json'
-            })
+            headers: new Headers({'Content-Type': 'application/json'})
           };
           let url = 'http://' + server + ':' + port + '/connection/test';
 
-          fetch(url, options)
-            .then((d) => d.json()).then((d) => {
-              console.log('Check status:', d);
-              server_el.check(true)
-              port_el.check(true)
-            }).catch((r) => {
-              console.log('Check status:', r);
-              server_el.check(false)
-              port_el.check(false)
-            });
+          fetch(url, options).then((d) => d.json()).then((d) => {
+            console.log('Check status:', d);
+            server_el.check(true)
+            port_el.check(true)
+          }).catch((r) => {
+            console.log('Check status:', r);
+            server_el.check(false)
+            port_el.check(false)
+          });
         },
         saveAndClose() {
           this.save();
@@ -133,7 +133,6 @@
             page('/restart');
             return;
           }
-
           page('/');
         }
       });

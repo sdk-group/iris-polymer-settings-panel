@@ -4,7 +4,6 @@
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 
-
 <dom-module id="iris-settings-control">
   <template>
     <style include="shared-styles"></style>
@@ -12,29 +11,32 @@
       :host {
         display: block;
       }
-      
+
       iron-icon {
         width: 20px;
         height: 20px;
       }
-      
+      #toggle {
+        padding-bottom: 20px;
+      }
+
       .status {
         display: inline-block;
         width: 20px;
         height: 20px;
       }
-      
+
       .settings-field {
         display: inline-block;
         height: 20px;
       }
+
     </style>
     <iris-settings-access id="settings"></iris-settings-access>
     <span class="settings-field">[[item.label]]
       <iron-icon hidden$="[[good]]" icon="done"></iron-icon>
       <iron-icon hidden$="[[bad]]" icon="error"></iron-icon>
     </span>
-
 
     <template is="dom-if" if="{{item.isInput}}">
       <paper-input value="{{item.value}}"></paper-input>
@@ -69,7 +71,7 @@
   </template>
 
   <script>
-    (function() {
+    (function () {
       'use strict';
 
       Polymer({
@@ -86,13 +88,13 @@
             reflectToAttribute: true
           }
         },
-        observers: [
-          'itemValueChanged(item.value)'
-        ],
+        observers: ['itemValueChanged(item.value)'],
         attached() {
           let stored = this.$.settings.getItem(this.item.name);
           this.name = this.item.name;
-          this.set('item.value', this.item.isToggle ? stored === 'true' : stored);
+          this.set('item.value', this.item.isToggle
+            ? stored === 'true'
+            : stored);
           this.old_value = this.item.value;
 
           this.init = true;
@@ -104,7 +106,8 @@
           this.bad = status;
         },
         itemValueChanged(value) {
-          if (!this.init) return;
+          if (!this.init)
+            return;
           this.good = true;
           this.set('valueChanged', this.old_value != value);
         },
@@ -112,8 +115,10 @@
           this.set('item.value', this.old_value);
         },
         save() {
-          if (!this.init) return;
-          if (this.old_value === this.item.value) return false;
+          if (!this.init)
+            return;
+          if (this.old_value === this.item.value)
+            return false;
 
           this.$.settings.setItem(this.item.name, this.item.value)
           this.old_value = this.item.value;
